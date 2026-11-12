@@ -1,17 +1,16 @@
 'use strict';
 
-// Sends a decision to the real API. BUG: the server's contract field is
-// "decision", this sends "verdict" instead (the field name of a different,
-// bulk endpoint in the real incident this is modeled on).
-async function decide(baseUrl, verdict) {
-  const res = await fetch(`${baseUrl}/decide`, {
+// Sends a review outcome to the real API. BUG: the server's contract field
+// is "outcome", this sends "choice" instead.
+async function submitReview(baseUrl, outcome) {
+  const res = await fetch(`${baseUrl}/review`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ verdict }),
+    body: JSON.stringify({ choice: outcome }),
   });
   const body = await res.json();
   if (!res.ok) {
-    const err = new Error(`decide failed: ${res.status} ${JSON.stringify(body)}`);
+    const err = new Error(`submitReview failed: ${res.status} ${JSON.stringify(body)}`);
     err.status = res.status;
     err.body = body;
     throw err;
@@ -19,4 +18,4 @@ async function decide(baseUrl, verdict) {
   return body;
 }
 
-module.exports = { decide };
+module.exports = { submitReview };

@@ -1,5 +1,5 @@
 {
-  "name": "decide-client-demo",
+  "name": "review-client-demo",
   "version": "1.0.0",
   "private": true,
   "description": "Minimal reproduction: a client sends the wrong field name, an echo mock cannot catch it, the real API returns 400.",

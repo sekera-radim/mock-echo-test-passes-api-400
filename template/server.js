@@ -1,20 +1,20 @@
 'use strict';
 const http = require('node:http');
 
-// The real contract: POST /decide requires a "decision" field.
-function validateDecisionBody(body) {
+// The real contract: POST /review requires an "outcome" field.
+function validateReviewBody(body) {
   if (!body || typeof body !== 'object') return 'body must be a JSON object';
-  if (body.decision !== 'approve' && body.decision !== 'reject') {
-    return 'decision is required and must be "approve" or "reject"';
+  if (body.outcome !== 'yes' && body.outcome !== 'no') {
+    return 'outcome is required and must be "yes" or "no"';
   }
   return null;
 }
 
 function createServer() {
   return http.createServer((req, res) => {
-    if (req.method !== 'POST' || req.url !== '/decide') {
+    if (req.method !== 'POST' || req.url !== '/review') {
       res.writeHead(404, { 'content-type': 'application/json' });
-      res.end(JSON.stringify({ error: 'not found' }));
+      res.end(JSON.stringify({ error: 'not found' }) + '\n');
       return;
     }
     let raw = '';
@@ -26,19 +26,19 @@ function createServer() {
       } catch {
         body = null;
       }
-      const err = validateDecisionBody(body);
+      const err = validateReviewBody(body);
       if (err) {
         res.writeHead(400, { 'content-type': 'application/json' });
-        res.end(JSON.stringify({ error: err }));
+        res.end(JSON.stringify({ error: err }) + '\n');
         return;
       }
       res.writeHead(200, { 'content-type': 'application/json' });
       res.end(JSON.stringify({
-        id: 'act_1',
-        status: body.decision === 'approve' ? 'approved' : 'rejected',
-      }));
+        id: 'rev_1',
+        status: body.outcome === 'yes' ? 'accepted' : 'declined',
+      }) + '\n');
     });
   });
 }
 
-module.exports = { createServer, validateDecisionBody };
+module.exports = { createServer, validateReviewBody };

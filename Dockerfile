@@ -4,7 +4,7 @@ RUN useradd -m dev
 USER dev
 WORKDIR /home/dev
 # Minimal app: a real HTTP server with one validated endpoint, a client with
-# the wrong field name, and two "integrations" that copied the same mistake.
+# the wrong field name, and a second file that copied the same mistake.
 COPY --chown=dev template /home/dev/template
 COPY --chown=dev scripts /home/dev/scripts
 CMD ["bash", "scripts/test.sh"]
